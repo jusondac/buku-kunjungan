@@ -27,7 +27,7 @@
     <!-- Search and Filter -->
     <div class="bg-white rounded-lg shadow p-6">
         <form method="GET" action="{{ route('guests.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nama atau Telepon</label>
                     <input type="text" name="search" value="{{ request('search') }}"
@@ -42,6 +42,18 @@
                         <option value="menunggu" {{ request('status') === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                         <option value="dilayani" {{ request('status') === 'dilayani' ? 'selected' : '' }}>Dilayani</option>
                         <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Tanggal</label>
+                    <select name="date_filter" onchange="this.form.submit()"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Tanggal</option>
+                        <option value="hari_ini" {{ request('date_filter') === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                        <option value="kemarin" {{ request('date_filter') === 'kemarin' ? 'selected' : '' }}>Kemarin</option>
+                        <option value="seminggu_terakhir" {{ request('date_filter') === 'seminggu_terakhir' ? 'selected' : '' }}>Seminggu Terakhir</option>
+                        <option value="sebulan_terakhir" {{ request('date_filter') === 'sebulan_terakhir' ? 'selected' : '' }}>Sebulan Terakhir</option>
+                        <option value="setahun_terakhir" {{ request('date_filter') === 'setahun_terakhir' ? 'selected' : '' }}>Setahun Terakhir</option>
                     </select>
                 </div>
                 <div class="flex items-end gap-2">
@@ -98,7 +110,7 @@
                                         </form>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm font-mono {{ $guest->duration_info['is_long'] ? 'text-red-600 font-bold' : 'text-gray-600' }}">
+                                <td class="px-6 py-4 text-sm font-mono text-gray-600">
                                     {{ $guest->duration_info['formatted'] }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->created_at->format('d M Y') }}</td>

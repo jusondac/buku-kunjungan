@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // Create sample guests for testing (300-400 records with realistic durations)
-        Guest::factory(350)->create();
+        // Guest::factory(350)->create();
     }
 }
 

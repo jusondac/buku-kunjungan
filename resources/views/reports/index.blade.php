@@ -10,6 +10,18 @@
         <form method="GET" action="{{ route('reports.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Tanggal</label>
+                    <select name="date_filter" onchange="this.form.submit()"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Semua Tanggal</option>
+                        <option value="hari_ini" {{ request('date_filter') === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                        <option value="kemarin" {{ request('date_filter') === 'kemarin' ? 'selected' : '' }}>Kemarin</option>
+                        <option value="seminggu_terakhir" {{ request('date_filter') === 'seminggu_terakhir' ? 'selected' : '' }}>Seminggu Terakhir</option>
+                        <option value="sebulan_terakhir" {{ request('date_filter') === 'sebulan_terakhir' ? 'selected' : '' }}>Sebulan Terakhir</option>
+                        <option value="setahun_terakhir" {{ request('date_filter') === 'setahun_terakhir' ? 'selected' : '' }}>Setahun Terakhir</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
                     <input type="date" name="start_date" value="{{ request('start_date') }}"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -31,20 +43,20 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="flex items-end gap-2">
-                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-                        Tampilkan
-                    </button>
-                    <a href="{{ route('reports.index') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition text-center">
-                        Reset
-                    </a>
-                </div>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+                    Tampilkan
+                </button>
+                <a href="{{ route('reports.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-lg transition text-center">
+                    Reset
+                </a>
             </div>
         </form>
     </div>
 
     <!-- Statistics -->
-    @if(request('start_date') || request('end_date') || request('keperluan'))
+    @if(request('date_filter') || request('start_date') || request('end_date') || request('keperluan'))
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
                 <p class="text-gray-600 text-sm font-medium mb-2">Total Tamu</p>
@@ -68,7 +80,7 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data</h3>
             <div class="flex gap-4">
-                <a href="{{ route('reports.export.pdf', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
+                <a href="{{ route('reports.export.pdf', ['date_filter' => request('date_filter'), 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
                     class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center">
                     📄 Export PDF
                 </a>

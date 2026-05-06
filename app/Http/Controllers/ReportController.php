@@ -16,13 +16,22 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
+        $dateFilter = $request->input('date_filter', '');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $keperluan = $request->input('keperluan');
 
         $query = Guest::query();
 
-        if ($startDate && $endDate) {
+        // Date filter (preset options)
+        if ($dateFilter) {
+            $dateRange = $this->getDateRange($dateFilter);
+            if ($dateRange[0] && $dateRange[1]) {
+                $query->whereBetween('created_at', $dateRange);
+            }
+        }
+        // Custom date range
+        elseif ($startDate && $endDate) {
             $query->whereBetween('created_at', [
                 Carbon::parse($startDate)->startOfDay(),
                 Carbon::parse($endDate)->endOfDay(),
@@ -44,7 +53,7 @@ class ReportController extends Controller
 
         $kperluanOptions = ['rehabilitas', 'skhpn', 'bagian umum', 'pemberantasan', 'lainnya'];
 
-        return view('reports.index', compact('guests', 'statistics', 'startDate', 'endDate', 'keperluan', 'kperluanOptions'));
+        return view('reports.index', compact('guests', 'statistics', 'startDate', 'endDate', 'keperluan', 'kperluanOptions', 'dateFilter'));
     }
 
     /**
@@ -123,13 +132,22 @@ class ReportController extends Controller
      */
     public function exportPdf(Request $request)
     {
+        $dateFilter = $request->input('date_filter', '');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $keperluan = $request->input('keperluan');
 
         $query = Guest::query();
 
-        if ($startDate && $endDate) {
+        // Date filter (preset options)
+        if ($dateFilter) {
+            $dateRange = $this->getDateRange($dateFilter);
+            if ($dateRange[0] && $dateRange[1]) {
+                $query->whereBetween('created_at', $dateRange);
+            }
+        }
+        // Custom date range
+        elseif ($startDate && $endDate) {
             $query->whereBetween('created_at', [
                 Carbon::parse($startDate)->startOfDay(),
                 Carbon::parse($endDate)->endOfDay(),
@@ -174,5 +192,37 @@ class ReportController extends Controller
         ];
 
         return $translations[$status] ?? $status;
+    }
+
+    /**
+     * Get date range based on time filter
+     */
+    private function getDateRange($filter)
+    {
+        $now = now();
+
+        return match($filter) {
+            'hari_ini' => [
+                $now->copy()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'kemarin' => [
+                $now->copy()->subDay()->startOfDay(),
+                $now->copy()->subDay()->endOfDay(),
+            ],
+            'seminggu_terakhir' => [
+                $now->copy()->subDays(7)->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'sebulan_terakhir' => [
+                $now->copy()->subMonth()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'setahun_terakhir' => [
+                $now->copy()->subYear()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            default => [null, null],
+        };
     }
 }

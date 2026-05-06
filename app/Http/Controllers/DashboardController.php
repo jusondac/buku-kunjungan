@@ -13,7 +13,7 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $timeFilter = $request->input('time_filter', 'bulan_ini');
+        $timeFilter = $request->input('time_filter', 'hari_ini');
 
         // Determine date range based on filter
         $dateRange = $this->getDateRange($timeFilter);
@@ -27,7 +27,7 @@ class DashboardController extends Controller
             'dilayani' => $baseQuery->where('status', 'dilayani')->count(),
             'selesai' => $baseQuery->where('status', 'selesai')->count(),
         ];
-
+        dd(Guest::all());
         // Get data for this month (for secondary reference)
         $thisMonth = [
             'total' => Guest::whereMonth('created_at', now()->month)

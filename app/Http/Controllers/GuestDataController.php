@@ -16,6 +16,21 @@ class GuestDataController extends Controller
     {
         $query = Guest::query();
 
+        // Date filter
+        $dateFilter = $request->input('date_filter', '');
+        if ($dateFilter) {
+            $dateRange = $this->getDateRange($dateFilter);
+            $query->whereBetween('created_at', $dateRange);
+        }
+
+        // Custom date range
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->input('start_date'))->startOfDay(),
+                Carbon::parse($request->input('end_date'))->endOfDay(),
+            ]);
+        }
+
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -104,6 +119,38 @@ class GuestDataController extends Controller
         $minutes = floor(($seconds % 3600) / 60);
 
         return "{$days}D {$hours}H {$minutes}M";
+    }
+
+    /**
+     * Get date range based on time filter
+     */
+    private function getDateRange($filter)
+    {
+        $now = now();
+
+        return match($filter) {
+            'hari_ini' => [
+                $now->copy()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'kemarin' => [
+                $now->copy()->subDay()->startOfDay(),
+                $now->copy()->subDay()->endOfDay(),
+            ],
+            'seminggu_terakhir' => [
+                $now->copy()->subDays(7)->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'sebulan_terakhir' => [
+                $now->copy()->subMonth()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            'setahun_terakhir' => [
+                $now->copy()->subYear()->startOfDay(),
+                $now->copy()->endOfDay(),
+            ],
+            default => [null, null],
+        };
     }
 
     /**
