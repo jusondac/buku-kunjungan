@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone');
             $table->text('address');
             $table->text('purpose');
+            $table->text('purpose_lainnya')->nullable();
             $table->enum('status', ['menunggu', 'dilayani', 'selesai'])->default('menunggu');
             $table->timestamps();
         });

@@ -14,6 +14,7 @@ class Guest extends Model
         'phone',
         'address',
         'purpose',
+        'purpose_lainnya',
         'status',
     ];
 

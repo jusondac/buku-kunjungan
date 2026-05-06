@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password123'),
         ]);
 
-        // Create sample guests for testing
-        Guest::factory(20)->create();
+        // Create sample guests for testing (50-100 records)
+        Guest::factory(75)->create();
     }
 }
 

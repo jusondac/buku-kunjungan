@@ -48,13 +48,32 @@
                     placeholder="Masukkan alamat lengkap" required>{{ old('address') }}</textarea>
             </div>
 
-            <div>
+            <div x-data="{ purposeType: '{{ old('purpose', '') }}' }">
                 <label for="purpose" class="block text-sm font-medium text-gray-700 mb-2">
                     Keperluan <span class="text-red-500">*</span>
                 </label>
-                <textarea id="purpose" name="purpose" rows="3"
+                <select id="purpose" name="purpose" x-model="purposeType"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan keperluan kunjungan" required>{{ old('purpose') }}</textarea>
+                    required>
+                    <option value="">Pilih Keperluan</option>
+                    <option value="rehabilitas">Rehabilitas</option>
+                    <option value="skhpn">SKHPN</option>
+                    <option value="bagian umum">Bagian Umum</option>
+                    <option value="pemberantasan">Pemberantasan</option>
+                    <option value="lainnya">Lainnya</option>
+                </select>
+                
+                <!-- Conditional field for "lainnya" -->
+                <div x-show="purposeType === 'lainnya'" class="mt-4" style="display: none;">
+                    <label for="purpose_lainnya" class="block text-sm font-medium text-gray-700 mb-2">
+                        Keperluan Lainnya <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="purpose_lainnya" name="purpose_lainnya" 
+                        value="{{ old('purpose_lainnya', '') }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Jelaskan keperluan Anda"
+                        x-bind:required="purposeType === 'lainnya'">
+                </div>
             </div>
 
             <div class="flex gap-4">

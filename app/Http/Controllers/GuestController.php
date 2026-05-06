@@ -21,12 +21,19 @@ class GuestController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'address' => 'required|string|max:500',
-            'purpose' => 'required|string|max:500',
-        ], [
+            'purpose' => 'required|in:rehabilitas,skhpn,bagian umum,pemberantasan,lainnya',
+        ];
+        
+        // If purpose is 'lainnya', require purpose_lainnya field
+        if ($request->input('purpose') === 'lainnya') {
+            $rules['purpose_lainnya'] = 'required|string|max:500';
+        }
+        
+        $validator = Validator::make($request->all(), $rules, [
             'name.required' => 'Nama harus diisi',
             'name.string' => 'Nama harus berupa teks',
             'name.max' => 'Nama maksimal 255 karakter',
@@ -37,8 +44,10 @@ class GuestController extends Controller
             'address.string' => 'Alamat harus berupa teks',
             'address.max' => 'Alamat maksimal 500 karakter',
             'purpose.required' => 'Keperluan harus diisi',
-            'purpose.string' => 'Keperluan harus berupa teks',
-            'purpose.max' => 'Keperluan maksimal 500 karakter',
+            'purpose.in' => 'Keperluan tidak valid',
+            'purpose_lainnya.required' => 'Keperluan lainnya harus diisi',
+            'purpose_lainnya.string' => 'Keperluan lainnya harus berupa teks',
+            'purpose_lainnya.max' => 'Keperluan lainnya maksimal 500 karakter',
         ]);
 
         if ($validator->fails()) {
@@ -46,12 +55,18 @@ class GuestController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        
+        // If purpose is 'lainnya', store the custom input, otherwise store the selected value
+        $purpose = $request->input('purpose') === 'lainnya' 
+            ? $request->input('purpose_lainnya')
+            : $request->input('purpose');
 
         Guest::create([
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
-            'purpose' => $request->input('purpose'),
+            'purpose' => $purpose,
+            'purpose_lainnya' => $request->input('purpose_lainnya'),
             'status' => 'menunggu',
         ]);
 
