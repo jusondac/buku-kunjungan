@@ -52,7 +52,55 @@ class DashboardController extends Controller
         
         $timerMetrics = $this->calculateTimerMetrics($selesaiRecords);
 
-        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics'));
+        // Calculate new service metrics
+        $serviceMetrics = $this->calculateServiceMetrics($statistics, $selesaiRecords);
+
+        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics', 'serviceMetrics'));
+    }
+
+    /**
+     * Calculate service-related metrics for dashboard
+     */
+    private function calculateServiceMetrics($statistics, $selesaiRecords)
+    {
+        // A. Average service time (rata-rata waktu layanan)
+        $averageSeconds = 0;
+        if ($selesaiRecords->count() > 0) {
+            $totalSeconds = $selesaiRecords->sum(function ($record) {
+                return abs($record->updated_at->diffInSeconds($record->created_at));
+            });
+            $averageSeconds = $totalSeconds / $selesaiRecords->count();
+        }
+
+        // B. Total not completed (belum selesai)
+        $totalNotCompleted = $statistics['menunggu'] + $statistics['dilayani'];
+
+        return [
+            'average_service_time' => $this->formatDurationSeconds($averageSeconds),
+            'average_service_time_raw' => $averageSeconds,
+            'total_not_completed' => $totalNotCompleted,
+            'total_completed' => $statistics['selesai'],
+        ];
+    }
+
+    /**
+     * Format duration in seconds to mm:ss or HH:mm:ss format
+     */
+    private function formatDurationSeconds($seconds)
+    {
+        if ($seconds <= 0) {
+            return '-';
+        }
+
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+
+        if ($hours > 0) {
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+        } else {
+            return sprintf('%02d:%02d', $minutes, $secs);
+        }
     }
 
     /**

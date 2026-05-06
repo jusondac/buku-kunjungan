@@ -68,13 +68,14 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Durasi Layanan</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @foreach ($guests as $guest)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50 {{ $guest->duration_info['is_long'] ? 'bg-yellow-50' : '' }}">
                                 <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $guest->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->phone }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($guest->address, 25) }}</td>
@@ -96,6 +97,9 @@
                                             </select>
                                         </form>
                                     @endif
+                                </td>
+                                <td class="px-6 py-4 text-sm font-mono {{ $guest->duration_info['is_long'] ? 'text-red-600 font-bold' : 'text-gray-600' }}">
+                                    {{ $guest->duration_info['formatted'] }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->created_at->format('d M Y') }}</td>
                                 <td class="px-6 py-4 text-sm">

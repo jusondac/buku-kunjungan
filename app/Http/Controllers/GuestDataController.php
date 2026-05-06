@@ -10,6 +10,7 @@ class GuestDataController extends Controller
 {
     /**
      * Display list of all guests with pagination and search
+     * Sorted by longest duration (waiting time) at top
      */
     public function index(Request $request)
     {
@@ -27,7 +28,32 @@ class GuestDataController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        $guests = $query->latest('created_at')->paginate(15);
+        // Get all guests and add duration data, then sort by duration descending
+        $allGuests = $query->get();
+        
+        // Add duration info to each guest
+        $allGuests = $allGuests->map(function ($guest) {
+            $guest->duration_info = $this->calculateDuration($guest);
+            return $guest;
+        });
+
+        // Sort by duration descending (longest first)
+        $allGuests = $allGuests->sortByDesc(function ($guest) {
+            return $guest->duration_info['seconds'];
+        })->values();
+
+        // Manual pagination since we sorted in PHP
+        $page = $request->get('page', 1);
+        $perPage = 15;
+        $guests = new \Illuminate\Pagination\Paginator(
+            $allGuests->slice(($page - 1) * $perPage, $perPage)->values(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
 
         $statistics = [
             'total' => Guest::count(),
@@ -37,6 +63,50 @@ class GuestDataController extends Controller
         ];
 
         return view('guests.index', compact('guests', 'statistics'));
+    }
+
+    /**
+     * Calculate duration for a guest
+     * Returns array with formatted time and seconds for sorting
+     */
+    private function calculateDuration($guest)
+    {
+        if ($guest->status === 'selesai') {
+            // Fixed duration: updated_at - created_at
+            $seconds = abs($guest->updated_at->diffInSeconds($guest->created_at));
+        } else {
+            // Running duration: NOW - created_at
+            $seconds = abs(now()->diffInSeconds($guest->created_at));
+        }
+
+        // Format duration as mm:ss or HH:mm:ss
+        $formatted = $this->formatDurationTime($seconds);
+
+        return [
+            'seconds' => $seconds,
+            'formatted' => $formatted,
+            'is_long' => $seconds > 1800, // More than 30 minutes
+        ];
+    }
+
+    /**
+     * Format duration in seconds to mm:ss or HH:mm:ss format
+     */
+    private function formatDurationTime($seconds)
+    {
+        if ($seconds < 0) {
+            $seconds = 0;
+        }
+
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+
+        if ($hours > 0) {
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
+        } else {
+            return sprintf('%02d:%02d', $minutes, $secs);
+        }
     }
 
     /**

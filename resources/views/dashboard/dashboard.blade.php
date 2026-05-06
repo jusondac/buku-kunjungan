@@ -53,6 +53,30 @@
         </div>
     </div>
 
+    <!-- Service Performance Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Average Service Time -->
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-indigo-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Rata-rata Waktu Layanan</p>
+            <p class="text-3xl font-bold text-indigo-600 font-mono">{{ $serviceMetrics['average_service_time'] }}</p>
+            <p class="text-xs text-gray-500 mt-2">Dari {{ $statistics['selesai'] }} kunjungan selesai</p>
+        </div>
+
+        <!-- Total Not Completed -->
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-orange-500">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Belum Selesai</p>
+            <p class="text-3xl font-bold text-orange-500">{{ $serviceMetrics['total_not_completed'] }}</p>
+            <p class="text-xs text-gray-500 mt-2">{{ $statistics['menunggu'] }} menunggu + {{ $statistics['dilayani'] }} sedang dilayani</p>
+        </div>
+
+        <!-- Total Completed -->
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-emerald-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Selesai</p>
+            <p class="text-3xl font-bold text-emerald-600">{{ $serviceMetrics['total_completed'] }}</p>
+            <p class="text-xs text-gray-500 mt-2">Kunjungan yang sudah ditangani</p>
+        </div>
+    </div>
+
     <!-- Status Breakdown -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Status Distribution -->
