@@ -90,7 +90,8 @@ class GuestDataController extends Controller
     }
 
     /**
-     * Format duration in seconds to mm:ss or HH:mm:ss format
+     * Format duration in seconds to D H M format
+     * Example: 0D 2H 15M
      */
     private function formatDurationTime($seconds)
     {
@@ -98,15 +99,11 @@ class GuestDataController extends Controller
             $seconds = 0;
         }
 
-        $hours = floor($seconds / 3600);
+        $days = floor($seconds / 86400);
+        $hours = floor(($seconds % 86400) / 3600);
         $minutes = floor(($seconds % 3600) / 60);
-        $secs = $seconds % 60;
 
-        if ($hours > 0) {
-            return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
-        } else {
-            return sprintf('%02d:%02d', $minutes, $secs);
-        }
+        return "{$days}D {$hours}H {$minutes}M";
     }
 
     /**

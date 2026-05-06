@@ -55,7 +55,11 @@ class DashboardController extends Controller
         // Calculate new service metrics
         $serviceMetrics = $this->calculateServiceMetrics($statistics, $selesaiRecords);
 
-        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics', 'serviceMetrics'));
+        // Calculate total service time (all records - both selesai and ongoing)
+        $allRecords = $baseQuery->get();
+        $totalServiceTime = $this->calculateTotalServiceTime($allRecords);
+
+        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics', 'serviceMetrics', 'totalServiceTime'));
     }
 
     /**
@@ -196,6 +200,45 @@ class DashboardController extends Controller
                 $now->copy()->endOfMonth(),
             ], // bulan_ini
         };
+    }
+
+    /**
+     * Calculate total service time for all records
+     * Includes both selesai (fixed) and ongoing (live) durations
+     */
+    private function calculateTotalServiceTime($allRecords)
+    {
+        $totalSeconds = 0;
+
+        foreach ($allRecords as $record) {
+            if ($record->status === 'selesai') {
+                // Fixed duration
+                $seconds = abs($record->updated_at->diffInSeconds($record->created_at));
+            } else {
+                // Running duration
+                $seconds = abs(now()->diffInSeconds($record->created_at));
+            }
+            $totalSeconds += $seconds;
+        }
+
+        return $this->formatDurationDHM($totalSeconds);
+    }
+
+    /**
+     * Format duration in seconds to D H M format
+     * Example: 2D 5H 30M
+     */
+    private function formatDurationDHM($seconds)
+    {
+        if ($seconds <= 0) {
+            return '0D 0H 0M';
+        }
+
+        $days = floor($seconds / 86400);
+        $hours = floor(($seconds % 86400) / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+
+        return "{$days}D {$hours}H {$minutes}M";
     }
 }
 

@@ -23,7 +23,7 @@
     </div>
 
     <!-- Main Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Tamu -->
         <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
             <p class="text-gray-600 text-sm font-medium mb-2">Total Tamu</p>
@@ -31,49 +31,33 @@
             <p class="text-xs text-gray-500 mt-2">Bulan ini: {{ $thisMonth['total'] }}</p>
         </div>
 
-        <!-- Menunggu -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-yellow-500">
-            <p class="text-gray-600 text-sm font-medium mb-2">Menunggu</p>
-            <p class="text-4xl font-bold text-yellow-500">{{ $statistics['menunggu'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Bulan ini: {{ $thisMonth['menunggu'] }}</p>
+        <!-- Status Kunjungan (Combined) -->
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-purple-600">
+            <p class="text-gray-600 text-sm font-medium mb-3">Status Kunjungan</p>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-700">Selesai</span>
+                    <span class="text-2xl font-bold text-green-600">{{ $statistics['selesai'] }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-700">Belum Selesai</span>
+                    <span class="text-2xl font-bold text-orange-600">{{ $serviceMetrics['total_not_completed'] }}</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Dilayani -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500">
-            <p class="text-gray-600 text-sm font-medium mb-2">Dilayani</p>
-            <p class="text-4xl font-bold text-blue-500">{{ $statistics['dilayani'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Bulan ini: {{ $thisMonth['dilayani'] }}</p>
+        <!-- Total Waktu Layanan -->
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-cyan-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Waktu Layanan</p>
+            <p class="text-3xl font-bold text-cyan-600 font-mono">{{ $totalServiceTime }}</p>
+            <p class="text-xs text-gray-500 mt-2">Semua kunjungan</p>
         </div>
 
-        <!-- Selesai -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-600">
-            <p class="text-gray-600 text-sm font-medium mb-2">Selesai</p>
-            <p class="text-4xl font-bold text-green-600">{{ $statistics['selesai'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Bulan ini: {{ $thisMonth['selesai'] }}</p>
-        </div>
-    </div>
-
-    <!-- Service Performance Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Average Service Time -->
+        <!-- Rata-rata Waktu Layanan -->
         <div class="bg-white rounded-lg shadow p-6 border-t-4 border-indigo-600">
-            <p class="text-gray-600 text-sm font-medium mb-2">Rata-rata Waktu Layanan</p>
+            <p class="text-gray-600 text-sm font-medium mb-2">Rata-rata Waktu</p>
             <p class="text-3xl font-bold text-indigo-600 font-mono">{{ $serviceMetrics['average_service_time'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Dari {{ $statistics['selesai'] }} kunjungan selesai</p>
-        </div>
-
-        <!-- Total Not Completed -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-orange-500">
-            <p class="text-gray-600 text-sm font-medium mb-2">Total Belum Selesai</p>
-            <p class="text-3xl font-bold text-orange-500">{{ $serviceMetrics['total_not_completed'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">{{ $statistics['menunggu'] }} menunggu + {{ $statistics['dilayani'] }} sedang dilayani</p>
-        </div>
-
-        <!-- Total Completed -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-emerald-600">
-            <p class="text-gray-600 text-sm font-medium mb-2">Total Selesai</p>
-            <p class="text-3xl font-bold text-emerald-600">{{ $serviceMetrics['total_completed'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Kunjungan yang sudah ditangani</p>
+            <p class="text-xs text-gray-500 mt-2">Per kunjungan selesai</p>
         </div>
     </div>
 
