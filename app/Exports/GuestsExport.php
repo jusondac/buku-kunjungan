@@ -13,11 +13,13 @@ class GuestsExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
 {
     protected $startDate;
     protected $endDate;
+    protected $keperluan;
 
-    public function __construct($startDate = null, $endDate = null)
+    public function __construct($startDate = null, $endDate = null, $keperluan = null)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->keperluan = $keperluan;
     }
 
     public function query(): Builder
@@ -30,6 +32,10 @@ class GuestsExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSi
 
         if ($this->endDate) {
             $query->whereDate('created_at', '<=', $this->endDate);
+        }
+
+        if ($this->keperluan) {
+            $query->where('purpose', $this->keperluan);
         }
 
         return $query->orderBy('created_at', 'desc');

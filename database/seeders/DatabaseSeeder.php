@@ -17,12 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create a staff user (petugas) for testing
-        User::factory()->create([
-            'name' => 'Petugas Admin',
-            'email' => 'petugas@example.com',
-            'password' => Hash::make('password123'),
-        ]);
+        // Create a staff user (petugas) for testing - only if not exists
+        User::firstOrCreate(
+            ['email' => 'petugas@example.com'],
+            [
+                'name' => 'Petugas Admin',
+                'password' => Hash::make('password123'),
+            ]
+        );
 
         // Create sample guests for testing (50-100 records)
         Guest::factory(75)->create();

@@ -12,12 +12,13 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class ReportController extends Controller
 {
     /**
-     * Show report page with date range filter
+     * Show report page with date range and keperluan filter
      */
     public function index(Request $request)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $keperluan = $request->input('keperluan');
 
         $query = Guest::query();
 
@@ -26,6 +27,10 @@ class ReportController extends Controller
                 Carbon::parse($startDate)->startOfDay(),
                 Carbon::parse($endDate)->endOfDay(),
             ]);
+        }
+
+        if ($keperluan) {
+            $query->where('purpose', $keperluan);
         }
 
         $guests = $query->latest('created_at')->get();
@@ -37,7 +42,9 @@ class ReportController extends Controller
             'selesai' => $guests->where('status', 'selesai')->count(),
         ];
 
-        return view('reports.index', compact('guests', 'statistics', 'startDate', 'endDate'));
+        $kperluanOptions = ['rehabilitas', 'skhpn', 'bagian umum', 'pemberantasan', 'lainnya'];
+
+        return view('reports.index', compact('guests', 'statistics', 'startDate', 'endDate', 'keperluan', 'kperluanOptions'));
     }
 
     /**
@@ -101,11 +108,12 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $keperluan = $request->input('keperluan');
 
         $filename = 'buku_kunjungan_' . now()->format('Y_m_d_H_i_s') . '.xlsx';
 
         return Excel::download(
-            new GuestsExport($startDate, $endDate),
+            new GuestsExport($startDate, $endDate, $keperluan),
             $filename
         );
     }
@@ -117,6 +125,7 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $keperluan = $request->input('keperluan');
 
         $query = Guest::query();
 
@@ -125,6 +134,10 @@ class ReportController extends Controller
                 Carbon::parse($startDate)->startOfDay(),
                 Carbon::parse($endDate)->endOfDay(),
             ]);
+        }
+
+        if ($keperluan) {
+            $query->where('purpose', $keperluan);
         }
 
         $guests = $query->latest('created_at')->get();
