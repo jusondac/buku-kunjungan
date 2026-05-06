@@ -47,7 +47,72 @@ class DashboardController extends Controller
                 ->count(),
         ];
 
-        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter'));
+        // Calculate timer-based metrics (only for selesai records)
+        $selesaiRecords = $baseQuery->where('status', 'selesai')->get();
+        
+        $timerMetrics = $this->calculateTimerMetrics($selesaiRecords);
+
+        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics'));
+    }
+
+    /**
+     * Calculate timer-based metrics for service duration
+     */
+    private function calculateTimerMetrics($selesaiRecords)
+    {
+        $totalDurationMinutes = 0;
+        $minDurationMinutes = null;
+        $maxDurationMinutes = null;
+        $count = 0;
+
+        foreach ($selesaiRecords as $record) {
+            $durationMinutes = $record->duration_minutes ?? 0;
+            
+            if ($durationMinutes > 0) {
+                $totalDurationMinutes += $durationMinutes;
+                $count++;
+                
+                if ($minDurationMinutes === null || $durationMinutes < $minDurationMinutes) {
+                    $minDurationMinutes = $durationMinutes;
+                }
+                
+                if ($maxDurationMinutes === null || $durationMinutes > $maxDurationMinutes) {
+                    $maxDurationMinutes = $durationMinutes;
+                }
+            }
+        }
+
+        $averageDurationMinutes = $count > 0 ? round($totalDurationMinutes / $count, 1) : 0;
+
+        return [
+            'total_duration' => $this->formatDuration($totalDurationMinutes),
+            'total_duration_raw' => $totalDurationMinutes,
+            'average_duration' => $this->formatDuration($averageDurationMinutes),
+            'average_duration_raw' => $averageDurationMinutes,
+            'fastest_duration' => $this->formatDuration($minDurationMinutes),
+            'fastest_duration_raw' => $minDurationMinutes,
+            'slowest_duration' => $this->formatDuration($maxDurationMinutes),
+            'slowest_duration_raw' => $maxDurationMinutes,
+            'completed_count' => $count,
+        ];
+    }
+
+    /**
+     * Format duration in minutes/hours
+     */
+    private function formatDuration($minutes)
+    {
+        if ($minutes === null || $minutes === 0) {
+            return '-';
+        }
+
+        if ($minutes >= 60) {
+            $hours = floor($minutes / 60);
+            $mins = $minutes % 60;
+            return $mins > 0 ? "{$hours}h {$mins}m" : "{$hours}h";
+        }
+
+        return "{$minutes}m";
     }
 
     /**

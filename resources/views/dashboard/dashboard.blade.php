@@ -112,6 +112,42 @@
         </div>
     </div>
 
+    <!-- Timer Analytics Section -->
+    @if($timerMetrics['completed_count'] > 0)
+        <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow p-6 border-l-4 border-purple-600">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">⏱️ Analitik Waktu Pelayanan</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Total Waktu -->
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <p class="text-gray-600 text-xs font-medium mb-2">Total Waktu Semua Kunjungan</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ $timerMetrics['total_duration'] }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ $timerMetrics['completed_count'] }} kunjungan selesai</p>
+                </div>
+                
+                <!-- Rata-rata Waktu -->
+                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                    <p class="text-gray-600 text-xs font-medium mb-2">Rata-rata Waktu Pelayanan</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ $timerMetrics['average_duration'] }}</p>
+                    <p class="text-xs text-gray-500 mt-1">per kunjungan</p>
+                </div>
+                
+                <!-- Waktu Tercepat -->
+                <div class="bg-white rounded-lg p-4 border border-green-200">
+                    <p class="text-gray-600 text-xs font-medium mb-2">Waktu Tercepat Pelayanan</p>
+                    <p class="text-3xl font-bold text-green-600">{{ $timerMetrics['fastest_duration'] }}</p>
+                    <p class="text-xs text-gray-500 mt-1">waktu tercepat</p>
+                </div>
+                
+                <!-- Waktu Terlama -->
+                <div class="bg-white rounded-lg p-4 border border-orange-200">
+                    <p class="text-gray-600 text-xs font-medium mb-2">Waktu Terlama Pelayanan</p>
+                    <p class="text-3xl font-bold text-orange-600">{{ $timerMetrics['slowest_duration'] }}</p>
+                    <p class="text-xs text-gray-500 mt-1">waktu terlama</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Summary Text -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <h3 class="text-lg font-semibold text-blue-900 mb-2">Ringkasan</h3>
