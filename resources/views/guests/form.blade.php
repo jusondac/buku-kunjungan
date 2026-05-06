@@ -31,12 +31,22 @@
             </div>
 
             <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                    Email <span class="text-gray-500">(Opsional)</span>
+                </label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Masukkan email Anda (opsional)">
+            </div>
+
+            <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
                     Nomor Telepon <span class="text-red-500">*</span>
                 </label>
-                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
+                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" inputmode="numeric" pattern="[0-9]*"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan nomor telepon" required>
+                    placeholder="Masukkan nomor telepon (angka saja)" required
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
 
             <div>

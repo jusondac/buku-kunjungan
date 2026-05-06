@@ -80,27 +80,37 @@
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($guest->address, 25) }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($guest->purpose, 25) }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <form method="POST" action="{{ route('guests.updateStatus', $guest->id) }}" class="inline-flex gap-2">
-                                        @csrf
-                                        @method('PATCH')
-                                        <select name="status" onchange="this.form.submit()"
-                                            class="px-3 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                            <option value="menunggu" {{ $guest->status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
-                                            <option value="dilayani" {{ $guest->status === 'dilayani' ? 'selected' : '' }}>Dilayani</option>
-                                            <option value="selesai" {{ $guest->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
-                                        </select>
-                                    </form>
+                                    @if($guest->status === 'selesai')
+                                        <span class="px-3 py-1 text-sm font-semibold bg-green-100 text-green-800 rounded">
+                                            Selesai
+                                        </span>
+                                    @else
+                                        <form method="POST" action="{{ route('guests.updateStatus', $guest->id) }}" class="inline-flex gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="status" onchange="this.form.submit()"
+                                                class="px-3 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                <option value="menunggu" {{ $guest->status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+                                                <option value="dilayani" {{ $guest->status === 'dilayani' ? 'selected' : '' }}>Dilayani</option>
+                                                <option value="selesai" {{ $guest->status === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                            </select>
+                                        </form>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->created_at->format('d M Y') }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    <form method="POST" action="{{ route('guests.destroy', $guest->id) }}" class="inline"
-                                        onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 font-semibold">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    @if($guest->status === 'selesai')
+                                        <span class="text-gray-400 cursor-not-allowed">Hapus</span>
+                                    @else
+                                        <form method="POST" action="{{ route('guests.destroy', $guest->id) }}" class="inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-800 font-semibold">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

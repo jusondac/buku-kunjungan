@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - Buku Kunjungan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-50">
     <nav class="bg-blue-600 text-white shadow-lg">
@@ -15,15 +14,16 @@
                     <h1 class="text-xl font-bold">📕 Buku Kunjungan</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    @auth
-                        <span class="text-sm text-blue-100">{{ Auth::user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-sm bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
-                                Logout
-                            </button>
-                        </form>
-                    @endauth
+                    @guest
+                  <a href="{{ route('login') }}" class="bg-white text-blue-600 font-semibold px-4 py-2 rounded hover:bg-gray-100 transition">
+                      Masuk
+                  </a>
+              @endguest
+              @auth
+                  <a href="{{ route('dashboard') }}" class="bg-white text-blue-600 font-semibold px-4 py-2 rounded hover:bg-gray-100 transition">
+                      Dashboard
+                  </a>
+              @endauth
                 </div>
             </div>
         </div>

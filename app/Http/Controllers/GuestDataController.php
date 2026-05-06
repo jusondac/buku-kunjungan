@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class GuestDataController extends Controller
 {
@@ -40,9 +41,15 @@ class GuestDataController extends Controller
 
     /**
      * Update guest status
+     * Cannot update status if already 'selesai' (read-only)
      */
     public function updateStatus(Request $request, Guest $guest)
     {
+        // Check if status is already 'selesai' - prevent updates
+        if ($guest->status === 'selesai') {
+            return redirect()->back()->with('error', 'Data sudah selesai dan tidak dapat diubah lagi.');
+        }
+
         $request->validate([
             'status' => 'required|in:menunggu,dilayani,selesai',
         ], [
@@ -50,17 +57,36 @@ class GuestDataController extends Controller
             'status.in' => 'Status tidak valid',
         ]);
 
-        $guest->update(['status' => $request->input('status')]);
+        $newStatus = $request->input('status');
+        
+        // If changing to 'selesai', calculate duration and set completed_at
+        if ($newStatus === 'selesai') {
+            $now = now();
+            $guest->update([
+                'status' => $newStatus,
+                'completed_at' => $now,
+                'duration_seconds' => $now->diffInSeconds($guest->created_at),
+            ]);
+        } else {
+            $guest->update(['status' => $newStatus]);
+        }
 
         return redirect()->back()->with('success', 'Status tamu berhasil diperbarui.');
     }
 
     /**
      * Delete guest record
+     * Cannot delete if status is 'selesai'
      */
     public function destroy(Guest $guest)
     {
+        // Prevent deletion if status is 'selesai'
+        if ($guest->status === 'selesai') {
+            return redirect()->back()->with('error', 'Data sudah selesai dan tidak dapat dihapus.');
+        }
+
         $guest->delete();
         return redirect()->back()->with('success', 'Data tamu berhasil dihapus.');
     }
 }
+

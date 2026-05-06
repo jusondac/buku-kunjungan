@@ -11,11 +11,13 @@ class Guest extends Model
 
     protected $fillable = [
         'name',
+        'email',
         'phone',
         'address',
         'purpose',
         'purpose_lainnya',
         'status',
+        'duration_seconds',
     ];
 
     protected $casts = [

@@ -4,6 +4,24 @@
 
 @section('content')
 <div class="space-y-8">
+    <!-- Time Filter -->
+    <div class="bg-white rounded-lg shadow p-4">
+        <form method="GET" action="{{ route('dashboard') }}" class="flex gap-3 items-end">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Filter Waktu</label>
+                <select name="time_filter" onchange="this.form.submit()"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="hari_ini" {{ $timeFilter === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                    <option value="kemarin" {{ $timeFilter === 'kemarin' ? 'selected' : '' }}>Kemarin</option>
+                    <option value="seminggu_terakhir" {{ $timeFilter === 'seminggu_terakhir' ? 'selected' : '' }}>Seminggu Terakhir</option>
+                    <option value="bulan_ini" {{ $timeFilter === 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
+                    <option value="sebulan_terakhir" {{ $timeFilter === 'sebulan_terakhir' ? 'selected' : '' }}>Sebulan Terakhir</option>
+                    <option value="setahun_terakhir" {{ $timeFilter === 'setahun_terakhir' ? 'selected' : '' }}>Setahun Terakhir</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
     <!-- Main Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <!-- Total Tamu -->

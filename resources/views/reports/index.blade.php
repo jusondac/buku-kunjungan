@@ -68,10 +68,6 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data</h3>
             <div class="flex gap-4">
-                <a href="{{ route('reports.export.excel', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
-                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center">
-                    📊 Export Excel (.xlsx)
-                </a>
                 <a href="{{ route('reports.export.pdf', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
                     class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center">
                     📄 Export PDF

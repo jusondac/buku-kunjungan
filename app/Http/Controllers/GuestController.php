@@ -23,7 +23,8 @@ class GuestController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            'phone' => 'required|regex:/^[0-9]+$/',
             'address' => 'required|string|max:500',
             'purpose' => 'required|in:rehabilitas,skhpn,bagian umum,pemberantasan,lainnya',
         ];
@@ -37,9 +38,10 @@ class GuestController extends Controller
             'name.required' => 'Nama harus diisi',
             'name.string' => 'Nama harus berupa teks',
             'name.max' => 'Nama maksimal 255 karakter',
+            'email.email' => 'Format email tidak valid',
+            'email.regex' => 'Format email tidak valid',
             'phone.required' => 'Nomor telepon harus diisi',
-            'phone.string' => 'Nomor telepon harus berupa teks',
-            'phone.max' => 'Nomor telepon maksimal 20 karakter',
+            'phone.regex' => 'Nomor telepon hanya boleh berisi angka',
             'address.required' => 'Alamat harus diisi',
             'address.string' => 'Alamat harus berupa teks',
             'address.max' => 'Alamat maksimal 500 karakter',
@@ -63,11 +65,13 @@ class GuestController extends Controller
 
         Guest::create([
             'name' => $request->input('name'),
+            'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'purpose' => $purpose,
             'purpose_lainnya' => $request->input('purpose_lainnya'),
             'status' => 'menunggu',
+            'duration_seconds' => 0,
         ]);
 
         return redirect()->route('guests.form')

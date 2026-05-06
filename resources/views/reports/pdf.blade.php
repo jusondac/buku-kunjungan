@@ -150,9 +150,8 @@
                     <th style="width: 15%;">Nama</th>
                     <th style="width: 12%;">Telepon</th>
                     <th style="width: 18%;">Alamat</th>
-                    <th style="width: 20%;">Keperluan</th>
-                    <th style="width: 12%;">Status</th>
-                    <th style="width: 15%;">Tanggal</th>
+                    <th style="width: 30%;">Keperluan</th>
+                    <th style="width: 20%;">Tanggal</th>
                 </tr>
             </thead>
             <tbody>
@@ -163,11 +162,6 @@
                         <td>{{ $guest->phone }}</td>
                         <td>{{ substr($guest->address, 0, 40) }}{{ strlen($guest->address) > 40 ? '...' : '' }}</td>
                         <td>{{ $guest->purpose }}</td>
-                        <td>
-                            <span class="status status-{{ $guest->status }}">
-                                {{ ucfirst($guest->status) }}
-                            </span>
-                        </td>
                         <td>{{ $guest->created_at->format('d-m-Y H:i') }}</td>
                     </tr>
                 @endforeach
