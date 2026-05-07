@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GuestDataController extends Controller
 {
@@ -16,26 +17,31 @@ class GuestDataController extends Controller
     {
         $query = Guest::query();
 
-        // Date filter
-        $dateFilter = $request->input('date_filter', '');
-        if ($dateFilter) {
-            $dateRange = $this->getDateRange($dateFilter);
-            $query->whereBetween('created_at', $dateRange);
-        }
+        if ($request->filled('start_date') || $request->filled('end_date')) {
+            $startDateInput = $request->input('start_date');
+            $endDateInput = $request->input('end_date');
 
-        // Custom date range
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('created_at', [
-                Carbon::parse($request->input('start_date'))->startOfDay(),
-                Carbon::parse($request->input('end_date'))->endOfDay(),
-            ]);
+            if ($startDateInput && $endDateInput) {
+                $startDate = Carbon::parse($startDateInput)->startOfDay();
+                $endDate = Carbon::parse($endDateInput)->endOfDay();
+            } elseif ($startDateInput) {
+                $startDate = Carbon::parse($startDateInput)->startOfDay();
+                $endDate = Carbon::parse($startDateInput)->endOfDay();
+            } else {
+                $startDate = Carbon::parse($endDateInput)->startOfDay();
+                $endDate = Carbon::parse($endDateInput)->endOfDay();
+            }
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
         }
 
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%");
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            });
         }
 
         // Status filter
@@ -60,8 +66,10 @@ class GuestDataController extends Controller
         // Manual pagination since we sorted in PHP
         $page = $request->get('page', 1);
         $perPage = 15;
-        $guests = new \Illuminate\Pagination\Paginator(
+        $total = $allGuests->count();
+        $guests = new LengthAwarePaginator(
             $allGuests->slice(($page - 1) * $perPage, $perPage)->values(),
+            $total,
             $perPage,
             $page,
             [
@@ -121,37 +129,6 @@ class GuestDataController extends Controller
         return "{$days}D {$hours}H {$minutes}M";
     }
 
-    /**
-     * Get date range based on time filter
-     */
-    private function getDateRange($filter)
-    {
-        $now = now();
-
-        return match($filter) {
-            'hari_ini' => [
-                $now->copy()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'kemarin' => [
-                $now->copy()->subDay()->startOfDay(),
-                $now->copy()->subDay()->endOfDay(),
-            ],
-            'seminggu_terakhir' => [
-                $now->copy()->subDays(7)->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'sebulan_terakhir' => [
-                $now->copy()->subMonth()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'setahun_terakhir' => [
-                $now->copy()->subYear()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            default => [null, null],
-        };
-    }
 
     /**
      * Update guest status

@@ -6,21 +6,27 @@
 <div class="space-y-8">
     <!-- Time Filter -->
     <div class="bg-white rounded-lg shadow p-4">
-        <form method="GET" action="{{ route('dashboard') }}" class="flex gap-3 items-end">
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Filter Waktu</label>
-                <select name="time_filter" onchange="this.form.submit()"
+        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                <input type="date" name="start_date" value="{{ request('start_date', $filterDates['start_date']) }}"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option value="hari_ini" {{ $timeFilter === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
-                    <option value="kemarin" {{ $timeFilter === 'kemarin' ? 'selected' : '' }}>Kemarin</option>
-                    <option value="seminggu_terakhir" {{ $timeFilter === 'seminggu_terakhir' ? 'selected' : '' }}>Seminggu Terakhir</option>
-                    <option value="bulan_ini" {{ $timeFilter === 'bulan_ini' ? 'selected' : '' }}>Bulan Ini</option>
-                    <option value="sebulan_terakhir" {{ $timeFilter === 'sebulan_terakhir' ? 'selected' : '' }}>Sebulan Terakhir</option>
-                    <option value="setahun_terakhir" {{ $timeFilter === 'setahun_terakhir' ? 'selected' : '' }}>Setahun Terakhir</option>
-                </select>
             </div>
-          </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Selesai</label>
+                <input type="date" name="end_date" value="{{ request('end_date', $filterDates['end_date']) }}"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div class="flex items-end gap-2 md:col-span-2">
+                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                    Terapkan
+                </button>
+                <a href="{{ route('dashboard') }}" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition text-center">
+                    Reset
+                </a>
+            </div>
         </form>
+    </div>
     <!-- Main Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Total Tamu -->
@@ -57,6 +63,22 @@
             <p class="text-gray-600 text-sm font-medium mb-2">Rata-rata Waktu</p>
             <p class="text-3xl font-bold text-indigo-600 font-mono">{{ $serviceMetrics['average_service_time'] }}</p>
             <p class="text-xs text-gray-500 mt-2">Per kunjungan selesai</p>
+        </div>
+    </div>
+
+    <!-- Additional Status Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Selesai</p>
+            <p class="text-3xl font-bold text-green-600">{{ $statistics['selesai'] }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Dilayani</p>
+            <p class="text-3xl font-bold text-blue-600">{{ $statistics['dilayani'] }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-yellow-600">
+            <p class="text-gray-600 text-sm font-medium mb-2">Total Menunggu</p>
+            <p class="text-3xl font-bold text-yellow-600">{{ $statistics['menunggu'] }}</p>
         </div>
     </div>
 

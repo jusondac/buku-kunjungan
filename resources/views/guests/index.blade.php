@@ -27,7 +27,7 @@
     <!-- Search and Filter -->
     <div class="bg-white rounded-lg shadow p-6">
         <form method="GET" action="{{ route('guests.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nama atau Telepon</label>
                     <input type="text" name="search" value="{{ request('search') }}"
@@ -45,18 +45,16 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Filter Tanggal</label>
-                    <select name="date_filter" onchange="this.form.submit()"
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Semua Tanggal</option>
-                        <option value="hari_ini" {{ request('date_filter') === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
-                        <option value="kemarin" {{ request('date_filter') === 'kemarin' ? 'selected' : '' }}>Kemarin</option>
-                        <option value="seminggu_terakhir" {{ request('date_filter') === 'seminggu_terakhir' ? 'selected' : '' }}>Seminggu Terakhir</option>
-                        <option value="sebulan_terakhir" {{ request('date_filter') === 'sebulan_terakhir' ? 'selected' : '' }}>Sebulan Terakhir</option>
-                        <option value="setahun_terakhir" {{ request('date_filter') === 'setahun_terakhir' ? 'selected' : '' }}>Setahun Terakhir</option>
-                    </select>
                 </div>
-                <div class="flex items-end gap-2">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Selesai</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div class="flex items-end gap-2 md:col-span-2">
                     <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
                         Cari
                     </button>

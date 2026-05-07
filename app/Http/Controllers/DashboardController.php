@@ -13,19 +13,30 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $timeFilter = $request->input('time_filter', 'hari_ini');
+        $startDateInput = $request->input('start_date');
+        $endDateInput = $request->input('end_date');
 
-        // Determine date range based on filter
-        $dateRange = $this->getDateRange($timeFilter);
+        if ($startDateInput && $endDateInput) {
+            $startDate = Carbon::parse($startDateInput)->startOfDay();
+            $endDate = Carbon::parse($endDateInput)->endOfDay();
+        } elseif ($startDateInput) {
+            $startDate = Carbon::parse($startDateInput)->startOfDay();
+            $endDate = Carbon::parse($startDateInput)->endOfDay();
+        } elseif ($endDateInput) {
+            $startDate = Carbon::parse($endDateInput)->startOfDay();
+            $endDate = Carbon::parse($endDateInput)->endOfDay();
+        } else {
+            $startDate = now()->startOfDay();
+            $endDate = now()->endOfDay();
+        }
 
-        // Build query with date filter
-        $baseQuery = Guest::whereBetween('created_at', $dateRange);
+        $baseQuery = Guest::whereBetween('created_at', [$startDate, $endDate]);
 
         $statistics = [
-            'total' => $baseQuery->count(),
-            'menunggu' => $baseQuery->where('status', 'menunggu')->count(),
-            'dilayani' => $baseQuery->where('status', 'dilayani')->count(),
-            'selesai' => $baseQuery->where('status', 'selesai')->count(),
+            'total' => (clone $baseQuery)->count(),
+            'menunggu' => (clone $baseQuery)->where('status', 'menunggu')->count(),
+            'dilayani' => (clone $baseQuery)->where('status', 'dilayani')->count(),
+            'selesai' => (clone $baseQuery)->where('status', 'selesai')->count(),
         ];
         // Get data for this month (for secondary reference)
         $thisMonth = [
@@ -47,7 +58,7 @@ class DashboardController extends Controller
         ];
 
         // Calculate timer-based metrics (only for selesai records)
-        $selesaiRecords = $baseQuery->where('status', 'selesai')->get();
+        $selesaiRecords = (clone $baseQuery)->where('status', 'selesai')->get();
         
         $timerMetrics = $this->calculateTimerMetrics($selesaiRecords);
 
@@ -55,10 +66,15 @@ class DashboardController extends Controller
         $serviceMetrics = $this->calculateServiceMetrics($statistics, $selesaiRecords);
 
         // Calculate total service time (all records - both selesai and ongoing)
-        $allRecords = $baseQuery->get();
+        $allRecords = (clone $baseQuery)->get();
         $totalServiceTime = $this->calculateTotalServiceTime($allRecords);
 
-        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timeFilter', 'timerMetrics', 'serviceMetrics', 'totalServiceTime'));
+        $filterDates = [
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+        ];
+
+        return view('dashboard.dashboard', compact('statistics', 'thisMonth', 'timerMetrics', 'serviceMetrics', 'totalServiceTime', 'filterDates'));
     }
 
     /**
@@ -72,38 +88,18 @@ class DashboardController extends Controller
             $totalSeconds = $selesaiRecords->sum(function ($record) {
                 return abs($record->updated_at->diffInSeconds($record->created_at));
             });
-            $averageSeconds = $totalSeconds / $selesaiRecords->count();
+            $averageSeconds = (int) round($totalSeconds / $selesaiRecords->count());
         }
 
         // B. Total not completed (belum selesai)
         $totalNotCompleted = $statistics['menunggu'] + $statistics['dilayani'];
 
         return [
-            'average_service_time' => $this->formatDurationSeconds($averageSeconds),
+            'average_service_time' => $this->formatDurationDHM($averageSeconds),
             'average_service_time_raw' => $averageSeconds,
             'total_not_completed' => $totalNotCompleted,
             'total_completed' => $statistics['selesai'],
         ];
-    }
-
-    /**
-     * Format duration in seconds to mm:ss or HH:mm:ss format
-     */
-    private function formatDurationSeconds($seconds)
-    {
-        if ($seconds <= 0) {
-            return '-';
-        }
-
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-        $secs = $seconds % 60;
-
-        if ($hours > 0) {
-            return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
-        } else {
-            return sprintf('%02d:%02d', $minutes, $secs);
-        }
     }
 
     /**
@@ -164,41 +160,6 @@ class DashboardController extends Controller
         }
 
         return "{$minutes}m";
-    }
-
-    /**
-     * Get date range based on time filter
-     */
-    private function getDateRange($filter)
-    {
-        $now = now();
-
-        return match($filter) {
-            'hari_ini' => [
-                $now->copy()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'kemarin' => [
-                $now->copy()->subDay()->startOfDay(),
-                $now->copy()->subDay()->endOfDay(),
-            ],
-            'seminggu_terakhir' => [
-                $now->copy()->subDays(7)->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'sebulan_terakhir' => [
-                $now->copy()->subMonth()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            'setahun_terakhir' => [
-                $now->copy()->subYear()->startOfDay(),
-                $now->copy()->endOfDay(),
-            ],
-            default => [
-                $now->copy()->startOfMonth(),
-                $now->copy()->endOfMonth(),
-            ], // bulan_ini
-        };
     }
 
     /**
