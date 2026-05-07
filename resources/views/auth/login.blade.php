@@ -4,8 +4,9 @@
 
 @section('content')
 <div class="max-w-md mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login Petugas</h2>
+  <div class="bg-white rounded-lg shadow-md p-8">
+    <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-32 mx-auto mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-12 text-center">Login Petugas</h2>
 
         @if ($errors->any())
             <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded">

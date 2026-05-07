@@ -11,8 +11,10 @@
     <div class="flex h-screen">
         <!-- Sidebar Navigation -->
         <aside class="w-64 bg-blue-900 text-white shadow-lg">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold">📕 Buku Kunjungan</h1>
+          
+          <div class="p-6 mt-0 text-center">
+                <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-48 mt-10 mx-auto mb-3">
+                <h1 class="text-2xl font-bold">Buku Kunjungan</h1>
             </div>
             
             <nav class="mt-8">
