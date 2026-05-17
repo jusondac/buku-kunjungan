@@ -106,12 +106,6 @@
             </div>
         </form>
 
-        <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-gray-700">
-                <strong>Catatan:</strong> Data Anda akan diproses oleh petugas. Status kunjungan akan diperbarui sesuai dengan proses yang berlangsung.
-            </p>
-        </div>
-
         @auth
             <div class="mt-4 text-center">
                 <a href="{{ route('dashboard') }}" class="text-blue-600 hover:text-blue-800 font-semibold">

@@ -26,8 +26,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Create sample guests for testing (300-400 records with realistic durations)
-        // Guest::factory(350)->create();
+        // Create sample guests for testing (50-70 records with realistic durations)
+        // GuestFactory already handles purpose_lainnya when purpose is 'lainnya'.
+        $guestCount = random_int(50, 70);
+        Guest::factory($guestCount)->create();
     }
 }
 

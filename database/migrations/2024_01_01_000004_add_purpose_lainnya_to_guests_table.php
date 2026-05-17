@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('guests', function (Blueprint $table) {
             if (!Schema::hasColumn('guests', 'purpose_lainnya')) {
                 $table->text('purpose_lainnya')->nullable()->after('purpose');
-            }
+          }
         });
     }
 
