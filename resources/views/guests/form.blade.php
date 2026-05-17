@@ -18,7 +18,18 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('guests.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('guests.store') }}" class="space-y-6"
+            x-data="{ purposeType: '{{ old('purpose', '') }}', purposeLainnya: '{{ old('purpose_lainnya', '') }}' }"
+            x-on:reset.prevent="
+                Array.from($el.querySelectorAll('input, textarea, select')).forEach((el) => {
+                    if (el.type === 'hidden') return;
+                    if (el.type === 'checkbox' || el.type === 'radio') { el.checked = false; return; }
+                    el.value = '';
+                });
+                purposeType = '';
+                purposeLainnya = '';
+            "
+        >
             @csrf
 
             <div>
@@ -58,7 +69,7 @@
                     placeholder="Masukkan alamat lengkap" required>{{ old('address') }}</textarea>
             </div>
 
-            <div x-data="{ purposeType: '{{ old('purpose', '') }}' }">
+            <div x-effect="if (purposeType !== 'lainnya') { purposeLainnya = '' }">
                 <label for="purpose" class="block text-sm font-medium text-gray-700 mb-2">
                     Keperluan <span class="text-red-500">*</span>
                 </label>
@@ -74,14 +85,13 @@
                 </select>
                 
                 <!-- Conditional field for "lainnya" -->
-                <div x-show="purposeType === 'lainnya'" class="mt-4" style="display: none;">
+                <div x-show="purposeType === 'lainnya'" x-cloak class="mt-4">
                     <label for="purpose_lainnya" class="block text-sm font-medium text-gray-700 mb-2">
                         Keperluan Lainnya <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" id="purpose_lainnya" name="purpose_lainnya" 
-                        value="{{ old('purpose_lainnya', '') }}"
+                    <input type="text" id="purpose_lainnya" name="purpose_lainnya" x-model="purposeLainnya"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Jelaskan keperluan Anda"
+                        placeholder="Masukkan keperluan lainnya"
                         x-bind:required="purposeType === 'lainnya'">
                 </div>
             </div>

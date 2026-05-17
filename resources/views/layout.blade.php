@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Buku Kunjungan</title>
+    <title>@yield('title') - SITADIGI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 <body class="bg-gray-50">
     <nav class="bg-blue-600 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-xl font-bold">📕 Buku Kunjungan</h1>
-                </div>
+                <a href="/" class="flex items-center justify-center space-x-2">
+                  <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-10 mr-3">
+                    <h1 class="text-xl font-bold">
+                       SITADIGI</h1>
+                </a>
                 <div class="flex items-center space-x-4">
                     @guest
                   <a href="{{ route('login') }}" class="bg-white text-blue-600 font-semibold px-4 py-2 rounded hover:bg-gray-100 transition">

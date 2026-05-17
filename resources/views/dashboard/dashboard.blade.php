@@ -6,7 +6,17 @@
 <div class="space-y-8">
     <!-- Time Filter -->
     <div class="bg-white rounded-lg shadow p-4">
-        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
+                <select name="periode"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="hari_ini" {{ request('periode', 'hari_ini') === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                    <option value="seminggu" {{ request('periode') === 'seminggu' ? 'selected' : '' }}>Seminggu Terakhir</option>
+                    <option value="sebulan" {{ request('periode') === 'sebulan' ? 'selected' : '' }}>Sebulan Terakhir</option>
+                    <option value="setahun" {{ request('periode') === 'setahun' ? 'selected' : '' }}>Setahun Terakhir</option>
+                </select>
+            </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
                 <input type="date" name="start_date" value="{{ request('start_date', $filterDates['start_date']) }}"
@@ -27,47 +37,12 @@
             </div>
         </form>
     </div>
-    <!-- Main Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Total Tamu -->
+    <!-- Additional Status Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
             <p class="text-gray-600 text-sm font-medium mb-2">Total Tamu</p>
-            <p class="text-4xl font-bold text-blue-600">{{ $statistics['total'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Bulan ini: {{ $thisMonth['total'] }}</p>
+            <p class="text-3xl font-bold text-blue-600">{{ $statistics['total'] }}</p>
         </div>
-
-        <!-- Status Kunjungan (Combined) -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-purple-600">
-            <p class="text-gray-600 text-sm font-medium mb-3">Status Kunjungan</p>
-            <div class="space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700">Selesai</span>
-                    <span class="text-2xl font-bold text-green-600">{{ $statistics['selesai'] }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700">Belum Selesai</span>
-                    <span class="text-2xl font-bold text-orange-600">{{ $serviceMetrics['total_not_completed'] }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Waktu Layanan -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-cyan-600">
-            <p class="text-gray-600 text-sm font-medium mb-2">Total Waktu Layanan</p>
-            <p class="text-3xl font-bold text-cyan-600 font-mono">{{ $totalServiceTime }}</p>
-            <p class="text-xs text-gray-500 mt-2">Semua kunjungan</p>
-        </div>
-
-        <!-- Rata-rata Waktu Layanan -->
-        <div class="bg-white rounded-lg shadow p-6 border-t-4 border-indigo-600">
-            <p class="text-gray-600 text-sm font-medium mb-2">Rata-rata Waktu</p>
-            <p class="text-3xl font-bold text-indigo-600 font-mono">{{ $serviceMetrics['average_service_time'] }}</p>
-            <p class="text-xs text-gray-500 mt-2">Per kunjungan selesai</p>
-        </div>
-    </div>
-
-    <!-- Additional Status Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-600">
             <p class="text-gray-600 text-sm font-medium mb-2">Total Selesai</p>
             <p class="text-3xl font-bold text-green-600">{{ $statistics['selesai'] }}</p>
@@ -140,42 +115,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Timer Analytics Section -->
-    @if($timerMetrics['completed_count'] > 0)
-        <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow p-6 border-l-4 border-purple-600">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">⏱️ Analitik Waktu Pelayanan</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Total Waktu -->
-                <div class="bg-white rounded-lg p-4 border border-purple-200">
-                    <p class="text-gray-600 text-xs font-medium mb-2">Total Waktu Semua Kunjungan</p>
-                    <p class="text-3xl font-bold text-purple-600">{{ $timerMetrics['total_duration'] }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ $timerMetrics['completed_count'] }} kunjungan selesai</p>
-                </div>
-                
-                <!-- Rata-rata Waktu -->
-                <div class="bg-white rounded-lg p-4 border border-blue-200">
-                    <p class="text-gray-600 text-xs font-medium mb-2">Rata-rata Waktu Pelayanan</p>
-                    <p class="text-3xl font-bold text-blue-600">{{ $timerMetrics['average_duration'] }}</p>
-                    <p class="text-xs text-gray-500 mt-1">per kunjungan</p>
-                </div>
-                
-                <!-- Waktu Tercepat -->
-                <div class="bg-white rounded-lg p-4 border border-green-200">
-                    <p class="text-gray-600 text-xs font-medium mb-2">Waktu Tercepat Pelayanan</p>
-                    <p class="text-3xl font-bold text-green-600">{{ $timerMetrics['fastest_duration'] }}</p>
-                    <p class="text-xs text-gray-500 mt-1">waktu tercepat</p>
-                </div>
-                
-                <!-- Waktu Terlama -->
-                <div class="bg-white rounded-lg p-4 border border-orange-200">
-                    <p class="text-gray-600 text-xs font-medium mb-2">Waktu Terlama Pelayanan</p>
-                    <p class="text-3xl font-bold text-orange-600">{{ $timerMetrics['slowest_duration'] }}</p>
-                    <p class="text-xs text-gray-500 mt-1">waktu terlama</p>
-                </div>
-            </div>
-        </div>
-    @endif
 
     <!-- Summary Text -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">

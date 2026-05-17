@@ -29,10 +29,8 @@ class GuestController extends Controller
             'purpose' => 'required|in:rehabilitas,skhpn,bagian umum,pemberantasan,lainnya',
         ];
         
-        // If purpose is 'lainnya', require purpose_lainnya field
-        if ($request->input('purpose') === 'lainnya') {
-            $rules['purpose_lainnya'] = 'required|string|max:500';
-        }
+        // Require custom purpose only when needed
+        $rules['purpose_lainnya'] = 'nullable|required_if:purpose,lainnya|string|max:500';
         
         $validator = Validator::make($request->all(), $rules, [
             'name.required' => 'Nama harus diisi',
@@ -69,7 +67,7 @@ class GuestController extends Controller
             'phone' => $request->input('phone'),
             'address' => $request->input('address'),
             'purpose' => $purpose,
-            'purpose_lainnya' => $request->input('purpose_lainnya'),
+            'purpose_lainnya' => $request->input('purpose') === 'lainnya' ? $request->input('purpose_lainnya') : null,
             'status' => 'menunggu',
             'duration_seconds' => 0,
         ]);

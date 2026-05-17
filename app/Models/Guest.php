@@ -18,7 +18,6 @@ class Guest extends Model
         'purpose_lainnya',
         'status',
         'duration_seconds',
-        'duration_minutes',
         'completed_at',
     ];
 

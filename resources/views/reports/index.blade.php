@@ -55,34 +55,14 @@
         </form>
     </div>
 
-    <!-- Statistics -->
     @if(request('date_filter') || request('start_date') || request('end_date') || request('keperluan'))
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
-                <p class="text-gray-600 text-sm font-medium mb-2">Total Tamu</p>
-                <p class="text-3xl font-bold text-blue-600">{{ $statistics['total'] }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-t-4 border-yellow-500">
-                <p class="text-gray-600 text-sm font-medium mb-2">Menunggu</p>
-                <p class="text-3xl font-bold text-yellow-500">{{ $statistics['menunggu'] }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-500">
-                <p class="text-gray-600 text-sm font-medium mb-2">Dilayani</p>
-                <p class="text-3xl font-bold text-blue-500">{{ $statistics['dilayani'] }}</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 border-t-4 border-green-600">
-                <p class="text-gray-600 text-sm font-medium mb-2">Selesai</p>
-                <p class="text-3xl font-bold text-green-600">{{ $statistics['selesai'] }}</p>
-            </div>
-        </div>
-
         <!-- Export Buttons -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data</h3>
             <div class="flex gap-4">
                 <a href="{{ route('reports.export.pdf', ['date_filter' => request('date_filter'), 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
                     class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition text-center">
-                    📄 Export PDF
+                    📄 Unduh Laporan
                 </a>
             </div>
         </div>

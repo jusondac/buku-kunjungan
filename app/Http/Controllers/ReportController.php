@@ -42,18 +42,13 @@ class ReportController extends Controller
             $query->where('purpose', $keperluan);
         }
 
-        $guests = $query->latest('created_at')->get();
+        $query->where('status', 'selesai');
 
-        $statistics = [
-            'total' => $guests->count(),
-            'menunggu' => $guests->where('status', 'menunggu')->count(),
-            'dilayani' => $guests->where('status', 'dilayani')->count(),
-            'selesai' => $guests->where('status', 'selesai')->count(),
-        ];
+        $guests = $query->latest('created_at')->get();
 
         $kperluanOptions = ['rehabilitas', 'skhpn', 'bagian umum', 'pemberantasan', 'lainnya'];
 
-        return view('reports.index', compact('guests', 'statistics', 'startDate', 'endDate', 'keperluan', 'kperluanOptions', 'dateFilter'));
+        return view('reports.index', compact('guests', 'startDate', 'endDate', 'keperluan', 'kperluanOptions', 'dateFilter'));
     }
 
     /**
@@ -136,6 +131,7 @@ class ReportController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $keperluan = $request->input('keperluan');
+        $wibNow = now()->setTimezone('Asia/Jakarta');
 
         $query = Guest::query();
 
@@ -158,26 +154,23 @@ class ReportController extends Controller
             $query->where('purpose', $keperluan);
         }
 
-        $guests = $query->latest('created_at')->get();
+        $query->where('status', 'selesai');
 
-        $statistics = [
-            'total' => $guests->count(),
-            'menunggu' => $guests->where('status', 'menunggu')->count(),
-            'dilayani' => $guests->where('status', 'dilayani')->count(),
-            'selesai' => $guests->where('status', 'selesai')->count(),
-        ];
+        $guests = $query->latest('created_at')->get()->map(function ($guest) {
+            $guest->created_at = $guest->created_at->copy()->setTimezone('Asia/Jakarta');
+            return $guest;
+        });
 
         $data = [
-            'title' => 'Laporan Buku Kunjungan',
-            'date_generated' => now()->format('d-m-Y H:i:s'),
+            'title' => 'Laporan SITADIGI',
+            'date_generated' => $wibNow->format('d-m-Y H:i:s'),
             'start_date' => $startDate,
             'end_date' => $endDate,
             'guests' => $guests,
-            'statistics' => $statistics,
         ];
 
         $pdf = Pdf::loadView('reports.pdf', $data);
-        return $pdf->download('buku_kunjungan_' . now()->format('Y_m_d_H_i_s') . '.pdf');
+        return $pdf->download('buku_kunjungan_' . $wibNow->format('Y_m_d_H_i_s') . '.pdf');
     }
 
     /**

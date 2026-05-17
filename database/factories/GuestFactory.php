@@ -90,7 +90,6 @@ class GuestFactory extends Factory
                 : null,
             'status' => $status,
             'duration_seconds' => $durationSeconds,
-            'duration_minutes' => $durationMinutes,
             'completed_at' => $completedAt,
             'created_at' => $createdAt,
             'updated_at' => $completedAt ?? $createdAt,

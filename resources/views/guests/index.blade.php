@@ -27,7 +27,7 @@
     <!-- Search and Filter -->
     <div class="bg-white rounded-lg shadow p-6">
         <form method="GET" action="{{ route('guests.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nama atau Telepon</label>
                     <input type="text" name="search" value="{{ request('search') }}"
@@ -42,6 +42,16 @@
                         <option value="menunggu" {{ request('status') === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                         <option value="dilayani" {{ request('status') === 'dilayani' ? 'selected' : '' }}>Dilayani</option>
                         <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Periode</label>
+                    <select name="periode"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="hari_ini" {{ request('periode', 'hari_ini') === 'hari_ini' ? 'selected' : '' }}>Hari Ini</option>
+                        <option value="seminggu" {{ request('periode') === 'seminggu' ? 'selected' : '' }}>Seminggu Terakhir</option>
+                        <option value="sebulan" {{ request('periode') === 'sebulan' ? 'selected' : '' }}>Sebulan Terakhir</option>
+                        <option value="setahun" {{ request('periode') === 'setahun' ? 'selected' : '' }}>Setahun Terakhir</option>
                     </select>
                 </div>
                 <div>
@@ -78,14 +88,13 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Alamat</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Keperluan</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Durasi Layanan</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Tanggal</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         @foreach ($guests as $guest)
-                            <tr class="hover:bg-gray-50 {{ $guest->duration_info['is_long'] ? 'bg-yellow-50' : '' }}">
+                            <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-sm text-gray-900 font-medium">{{ $guest->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->phone }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit($guest->address, 25) }}</td>
@@ -107,9 +116,6 @@
                                             </select>
                                         </form>
                                     @endif
-                                </td>
-                                <td class="px-6 py-4 text-sm font-mono text-gray-600">
-                                    {{ $guest->duration_info['formatted'] }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $guest->created_at->format('d M Y') }}</td>
                                 <td class="px-6 py-4 text-sm">

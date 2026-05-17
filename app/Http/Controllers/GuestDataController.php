@@ -5,17 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class GuestDataController extends Controller
 {
     /**
      * Display list of all guests with pagination and search
-     * Sorted by longest duration (waiting time) at top
+     * Sorted by newest records at top
      */
     public function index(Request $request)
     {
         $query = Guest::query();
+        $periode = $request->input('periode', 'hari_ini');
 
         if ($request->filled('start_date') || $request->filled('end_date')) {
             $startDateInput = $request->input('start_date');
@@ -31,9 +31,11 @@ class GuestDataController extends Controller
                 $startDate = Carbon::parse($endDateInput)->startOfDay();
                 $endDate = Carbon::parse($endDateInput)->endOfDay();
             }
-
-            $query->whereBetween('created_at', [$startDate, $endDate]);
+        } else {
+            [$startDate, $endDate] = $this->resolvePeriodRange($periode);
         }
+
+        $query->whereBetween('created_at', [$startDate, $endDate]);
 
         // Search functionality
         if ($request->filled('search')) {
@@ -49,86 +51,38 @@ class GuestDataController extends Controller
             $query->where('status', $request->input('status'));
         }
 
-        // Get all guests and add duration data, then sort by duration descending
-        $allGuests = $query->get();
-        
-        // Add duration info to each guest
-        $allGuests = $allGuests->map(function ($guest) {
-            $guest->duration_info = $this->calculateDuration($guest);
-            return $guest;
-        });
+        $guests = $query->orderByDesc('created_at')->paginate(15)->withQueryString();
 
-        // Sort by duration descending (longest first)
-        $allGuests = $allGuests->sortByDesc(function ($guest) {
-            return $guest->duration_info['seconds'];
-        })->values();
-
-        // Manual pagination since we sorted in PHP
-        $page = $request->get('page', 1);
-        $perPage = 15;
-        $total = $allGuests->count();
-        $guests = new LengthAwarePaginator(
-            $allGuests->slice(($page - 1) * $perPage, $perPage)->values(),
-            $total,
-            $perPage,
-            $page,
-            [
-                'path' => $request->url(),
-                'query' => $request->query(),
-            ]
-        );
-
+        $statisticsQuery = Guest::whereBetween('created_at', [$startDate, $endDate]);
         $statistics = [
-            'total' => Guest::count(),
-            'menunggu' => Guest::where('status', 'menunggu')->count(),
-            'dilayani' => Guest::where('status', 'dilayani')->count(),
-            'selesai' => Guest::where('status', 'selesai')->count(),
+            'total' => (clone $statisticsQuery)->count(),
+            'menunggu' => (clone $statisticsQuery)->where('status', 'menunggu')->count(),
+            'dilayani' => (clone $statisticsQuery)->where('status', 'dilayani')->count(),
+            'selesai' => (clone $statisticsQuery)->where('status', 'selesai')->count(),
         ];
 
         return view('guests.index', compact('guests', 'statistics'));
     }
 
     /**
-     * Calculate duration for a guest
-     * Returns array with formatted time and seconds for sorting
+     * Resolve period filter into start/end range
      */
-    private function calculateDuration($guest)
+    private function resolvePeriodRange(string $periode)
     {
-        if ($guest->status === 'selesai') {
-            // Fixed duration: updated_at - created_at
-            $seconds = abs($guest->updated_at->diffInSeconds($guest->created_at));
-        } else {
-            // Running duration: NOW - created_at
-            $seconds = abs(now()->diffInSeconds($guest->created_at));
+        $now = Carbon::now();
+
+        switch ($periode) {
+            case 'seminggu':
+                return [$now->copy()->subDays(6)->startOfDay(), $now->copy()->endOfDay()];
+            case 'sebulan':
+                return [$now->copy()->subDays(29)->startOfDay(), $now->copy()->endOfDay()];
+            case 'setahun':
+                return [$now->copy()->subDays(364)->startOfDay(), $now->copy()->endOfDay()];
+            case 'hari_ini':
+            default:
+                return [$now->copy()->startOfDay(), $now->copy()->endOfDay()];
         }
-
-        // Format duration as mm:ss or HH:mm:ss
-        $formatted = $this->formatDurationTime($seconds);
-
-        return [
-            'seconds' => $seconds,
-            'formatted' => $formatted,
-            'is_long' => $seconds > 1800, // More than 30 minutes
-        ];
     }
-
-    /**
-     * Format duration in seconds to D H M format
-     * Example: 0D 2H 15M
-     */
-    private function formatDurationTime($seconds)
-    {
-        if ($seconds < 0) {
-            $seconds = 0;
-        }
-
-        $days = floor($seconds / 86400);
-        $hours = floor(($seconds % 86400) / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-
-        return "{$days}D {$hours}H {$minutes}M";
-    }
-
 
     /**
      * Update guest status

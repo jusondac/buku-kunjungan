@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Buku Kunjungan</title>
+    <title>@yield('title') SITADIGI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -14,7 +14,7 @@
           
           <div class="p-6 mt-0 text-center">
                 <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-48 mt-10 mx-auto mb-3">
-                <h1 class="text-2xl font-bold">Buku Kunjungan</h1>
+                <h1 class="text-2xl font-bold">SITADIGI</h1>
             </div>
             
             <nav class="mt-8">

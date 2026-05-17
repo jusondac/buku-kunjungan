@@ -24,28 +24,6 @@
             margin-top: 5px;
             color: #666;
         }
-        .statistics {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-box {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-        }
-        .stat-box .label {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        .stat-box .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
         .filter-info {
             margin-bottom: 20px;
             padding: 10px;
@@ -123,24 +101,6 @@
         </div>
     @endif
 
-    <div class="statistics">
-        <div class="stat-box">
-            <div class="label">Total Tamu</div>
-            <div class="value">{{ $statistics['total'] }}</div>
-        </div>
-        <div class="stat-box">
-            <div class="label">Menunggu</div>
-            <div class="value">{{ $statistics['menunggu'] }}</div>
-        </div>
-        <div class="stat-box">
-            <div class="label">Dilayani</div>
-            <div class="value">{{ $statistics['dilayani'] }}</div>
-        </div>
-        <div class="stat-box">
-            <div class="label">Selesai</div>
-            <div class="value">{{ $statistics['selesai'] }}</div>
-        </div>
-    </div>
 
     @if($guests->count() > 0)
         <table>
@@ -150,7 +110,8 @@
                     <th style="width: 15%;">Nama</th>
                     <th style="width: 12%;">Telepon</th>
                     <th style="width: 18%;">Alamat</th>
-                    <th style="width: 30%;">Keperluan</th>
+                    <th style="width: 26%;">Keperluan</th>
+                    <th style="width: 12%;">Status</th>
                     <th style="width: 20%;">Tanggal</th>
                 </tr>
             </thead>
@@ -162,6 +123,7 @@
                         <td>{{ $guest->phone }}</td>
                         <td>{{ substr($guest->address, 0, 40) }}{{ strlen($guest->address) > 40 ? '...' : '' }}</td>
                         <td>{{ $guest->purpose }}</td>
+                        <td>{{ ucfirst($guest->status) }}</td>
                         <td>{{ $guest->created_at->format('d-m-Y H:i') }}</td>
                     </tr>
                 @endforeach
@@ -169,12 +131,12 @@
         </table>
     @else
         <div class="no-data">
-            Tidak ada data untuk ditampilkan
+            Tidak ada data untuk ditampilkanTotal WakTotal Wak
         </div>
     @endif
 
     <div class="footer">
-        Laporan ini dicetak secara otomatis oleh sistem Buku Kunjungan
+        Laporan ini dicetak secara otomatis oleh sistem SITADIGI
     </div>
 </body>
 </html>
