@@ -104,14 +104,14 @@
         </aside>
         
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto pl-72">
+        <main class="flex min-h-screen flex-1 flex-col overflow-y-auto pl-72">
             <!-- Top Header -->
             <header class="sticky top-0 z-10 border-b border-white/60 bg-white/80 px-8 py-5 backdrop-blur">
                 <h2 class="font-display text-2xl text-slate-900">@yield('page_title')</h2>
             </header>
             
             <!-- Content Area -->
-            <div class="p-8 space-y-6">
+            <div class="flex-1 p-8 space-y-6">
                 <!-- Flash Messages -->
                 @if ($message = Session::get('success'))
                     <div class="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
@@ -140,6 +140,15 @@
                 
                 @yield('content')
             </div>
+
+            <footer class="mt-auto px-8 pb-8">
+                <div class="rounded-3xl border border-white/70 bg-white/80 px-6 py-4 text-sm text-slate-600 shadow-sm">
+                    <div class="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+                        <span class="font-semibold text-slate-800">SITADIGI - Sistem Tamu Digital</span>
+                        <span>&copy; {{ date('Y') }}. All rights reserved.</span>
+                    </div>
+                </div>
+            </footer>
         </main>
     </div>
 </body>

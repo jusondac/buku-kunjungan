@@ -147,7 +147,7 @@
                         <path d="M12 12v6" />
                         <path d="M9 15l3 3 3-3" />
                     </svg>
-                    Export Data
+                    Unduh Data
                 </a>
             </div>
         </div>

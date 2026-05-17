@@ -108,7 +108,7 @@
                                         <form method="POST" action="{{ route('guests.updateStatus', $guest->id) }}" class="inline-flex gap-2">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" onchange="this.form.submit()"
+                                            <select name="status" data-current="{{ $guest->status }}" onchange="if (this.value === 'selesai' && !confirm('Tandai status sebagai selesai?')) { this.value = this.dataset.current; return; } this.form.submit();"
                                                 class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                                                 <option value="menunggu" {{ $guest->status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                                                 <option value="dilayani" {{ $guest->status === 'dilayani' ? 'selected' : '' }}>Dilayani</option>

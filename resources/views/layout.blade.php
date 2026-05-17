@@ -26,13 +26,14 @@
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.75),_rgba(240,246,255,0.7),_rgba(225,235,250,0.95))]"></div>
     </div>
 
-    <nav class="sticky top-0 z-20 border-b border-white/60 bg-white/70 backdrop-blur">
+    <div class="flex min-h-screen flex-col">
+        <nav class="sticky top-0 z-20 border-b border-white/60 bg-white/70 backdrop-blur">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <a href="/" class="flex items-center gap-3">
                     <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-10 h-10 rounded-2xl bg-white p-1 shadow-md">
                     <div>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-slate-500">Buku Kunjungan</p>
+                        <p class="text-[11px] uppercase tracking-[0.3em] text-slate-500">Sistem Tamu Digital</p>
                         <h1 class="text-lg font-semibold text-slate-900">SITADIGI</h1>
                     </div>
                 </a>
@@ -52,7 +53,9 @@
         </div>
     </nav>
 
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        </nav>
+
+        <div class="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
         @if ($message = Session::get('success'))
             <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
                 {{ $message }}
@@ -65,7 +68,17 @@
             </div>
         @endif
 
-        @yield('content')
+            @yield('content')
+        </div>
+
+        <footer class="mt-auto border-t border-white/60 bg-white/70 backdrop-blur">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">
+                <div class="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+                    <span class="font-semibold text-slate-800">SITADIGI - Sistem Tamu Digital</span>
+                    <span>&copy; {{ date('Y') }}. All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
     </div>
 </body>
 </html>

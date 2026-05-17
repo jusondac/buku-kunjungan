@@ -70,7 +70,7 @@
 
     <!-- Export Options -->
     <div class="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Export Data</h3>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Unduh Data</h3>
         <form method="GET" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -84,13 +84,13 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 <div class="flex items-end gap-2">
-                    <a href="{{ route('reports.export.excel', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" 
-                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition text-center">
-                        📥 Export Excel
+                        <a href="{{ route('reports.export.excel', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" 
+                            class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition text-center">
+                            📥 Unduh Excel
                     </a>
                     <a href="{{ route('reports.export.pdf', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" 
-                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition text-center">
-                        📄 Export PDF
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition text-center">
+                            📄 Unduh PDF
                     </a>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                             <form method="POST" action="{{ route('guests.updateStatus', $guest->id) }}" class="inline-flex gap-2">
                                 @csrf
                                 @method('PATCH')
-                                <select name="status" onchange="this.form.submit()"
+                                <select name="status" data-current="{{ $guest->status }}" onchange="if (this.value === 'selesai' && !confirm('Tandai status sebagai selesai?')) { this.value = this.dataset.current; return; } this.form.submit();"
                                     class="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <option value="menunggu" {{ $guest->status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                                     <option value="dilayani" {{ $guest->status === 'dilayani' ? 'selected' : '' }}>Dilayani</option>

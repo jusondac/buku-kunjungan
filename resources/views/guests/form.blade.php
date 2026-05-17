@@ -11,7 +11,7 @@
                 Layanan kunjungan aktif
             </div>
             <div>
-                <h2 class="font-display text-4xl sm:text-5xl text-slate-900">Buku Kunjungan Digital</h2>
+                <h2 class="font-display text-4xl sm:text-5xl text-slate-900">Sistem Tamu Digital</h2>
                 <p class="mt-4 text-base text-slate-600">Isi data kunjungan dengan cepat dan rapi. Sistem ini menyimpan jejak kunjungan secara aman dan mudah diakses oleh petugas.</p>
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
