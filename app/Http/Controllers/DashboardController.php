@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -40,12 +41,42 @@ class DashboardController extends Controller
             'dilayani' => (clone $baseQuery)->where('status', 'dilayani')->count(),
             'selesai' => (clone $baseQuery)->where('status', 'selesai')->count(),
         ];
+        $purposeCounts = [];
+        $purposeRows = (clone $baseQuery)->select('purpose', 'purpose_lainnya')->get();
+        foreach ($purposeRows as $row) {
+            $label = $row->purpose;
+            if ($label === 'lainnya') {
+                $label = trim((string) $row->purpose_lainnya);
+                if ($label === '') {
+                    $label = 'Lainnya';
+                }
+            }
+
+            $label = Str::title($label);
+            $purposeCounts[$label] = ($purposeCounts[$label] ?? 0) + 1;
+        }
+
+        arsort($purposeCounts);
+        $purposeLabels = array_keys($purposeCounts);
+        $purposeValues = array_values($purposeCounts);
+        $purposePercentages = [];
+        $purposeTotal = max($statistics['total'], 1);
+        foreach ($purposeValues as $count) {
+            $purposePercentages[] = round(($count / $purposeTotal) * 100, 1);
+        }
         $filterDates = [
             'start_date' => $startDate->toDateString(),
             'end_date' => $endDate->toDateString(),
         ];
 
-        return view('dashboard.dashboard', compact('statistics', 'filterDates'));
+        return view('dashboard.dashboard', compact(
+            'statistics',
+            'filterDates',
+            'purposeLabels',
+            'purposeValues',
+            'purposePercentages',
+            'purposeTotal'
+        ));
     }
 
     /**

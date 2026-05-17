@@ -37,6 +37,27 @@
             </div>
         </form>
     </div>
+    <!-- Purpose Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Rata-rata Keperluan</h3>
+                <span class="text-sm text-gray-500">{{ $purposeTotal }} tamu</span>
+            </div>
+            <div class="h-64">
+                <canvas id="purposeAverageChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Total Keperluan</h3>
+                <span class="text-sm text-gray-500">Jumlah per kategori</span>
+            </div>
+            <div class="h-64">
+                <canvas id="purposeTotalChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
+    </div>
     <!-- Additional Status Metrics -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-white rounded-lg shadow p-6 border-t-4 border-blue-600">
@@ -127,4 +148,86 @@
         </p>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+    const purposeLabels = @json($purposeLabels ?? []);
+    const purposeValues = @json($purposeValues ?? []);
+    const purposePercentages = @json($purposePercentages ?? []);
+
+    const averageContext = document.getElementById('purposeAverageChart');
+    const totalContext = document.getElementById('purposeTotalChart');
+
+    const chartColors = [
+        '#2563eb',
+        '#16a34a',
+        '#f59e0b',
+        '#7c3aed',
+        '#dc2626',
+        '#0d9488',
+        '#9333ea'
+    ];
+
+    if (averageContext && purposeLabels.length) {
+        new Chart(averageContext, {
+            type: 'doughnut',
+            data: {
+                labels: purposeLabels,
+                datasets: [
+                    {
+                        data: purposePercentages,
+                        backgroundColor: chartColors,
+                        borderWidth: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.label}: ${context.raw}%`
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    if (totalContext && purposeLabels.length) {
+        new Chart(totalContext, {
+            type: 'bar',
+            data: {
+                labels: purposeLabels,
+                datasets: [
+                    {
+                        label: 'Total Keperluan',
+                        data: purposeValues,
+                        backgroundColor: chartColors,
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+</script>
 @endsection
