@@ -30,7 +30,7 @@
                 </div>
                 <div>
                     <a href="{{ route('guests.form') }}" class="inline-flex items-center text-sm font-semibold text-slate-700 hover:text-slate-900">
-                        Daftar sebagai tamu
+                        Kembali sebagai Tamu
                     </a>
                 </div>
             </div>

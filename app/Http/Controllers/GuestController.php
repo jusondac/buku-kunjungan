@@ -23,7 +23,7 @@ class GuestController extends Controller
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            'email' => 'required|email|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             'phone' => 'required|regex:/^[0-9]+$/',
             'address' => 'required|string|max:500',
             'purpose' => 'required|in:rehabilitas,skhpn,bagian umum,pemberantasan,lainnya',
@@ -36,6 +36,7 @@ class GuestController extends Controller
             'name.required' => 'Nama harus diisi',
             'name.string' => 'Nama harus berupa teks',
             'name.max' => 'Nama maksimal 255 karakter',
+            'email.required' => 'Email harus diisi',
             'email.email' => 'Format email tidak valid',
             'email.regex' => 'Format email tidak valid',
             'phone.required' => 'Nomor telepon harus diisi',
@@ -73,6 +74,6 @@ class GuestController extends Controller
         ]);
 
         return redirect()->route('guests.form')
-            ->with('success', 'Terima kasih! Data Anda telah tersimpan.');
+            ->with('success', 'Terima kasih kunjungan anda sudah tercatat silahkan menunggu arahan berikutnya dari petugas');
     }
 }

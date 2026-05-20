@@ -108,7 +108,7 @@
                                         <form method="POST" action="{{ route('guests.updateStatus', $guest->id) }}" class="inline-flex gap-2">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" data-current="{{ $guest->status }}" onchange="if (this.value === 'selesai' && !confirm('Tandai status sebagai selesai?')) { this.value = this.dataset.current; return; } this.form.submit();"
+                                            <select name="status" data-current="{{ $guest->status }}" data-status-select
                                                 class="rounded-xl border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
                                                 <option value="menunggu" {{ $guest->status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
                                                 <option value="dilayani" {{ $guest->status === 'dilayani' ? 'selected' : '' }}>Dilayani</option>
@@ -149,4 +149,67 @@
         @endif
     </div>
 </div>
+
+<div id="status-confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+        <p class="text-sm font-semibold text-slate-900">Konfirmasi Perubahan</p>
+        <p class="mt-2 text-sm text-slate-700">Apakah anda yakin untuk merubah status ini?</p>
+        <div class="mt-6 flex justify-end gap-3">
+            <button type="button" data-action="cancel" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-slate-300">Tidak</button>
+            <button type="button" data-action="confirm" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">Ya</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('status-confirm-modal');
+        const confirmButton = modal.querySelector('[data-action="confirm"]');
+        const cancelButton = modal.querySelector('[data-action="cancel"]');
+        let pendingSelect = null;
+
+        const openModal = (select) => {
+            pendingSelect = select;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            pendingSelect = null;
+        };
+
+        const revertSelection = () => {
+            if (pendingSelect) {
+                pendingSelect.value = pendingSelect.dataset.current;
+            }
+        };
+
+        document.querySelectorAll('[data-status-select]').forEach((select) => {
+            select.addEventListener('change', () => {
+                openModal(select);
+            });
+        });
+
+        confirmButton.addEventListener('click', () => {
+            if (pendingSelect) {
+                pendingSelect.form.submit();
+            }
+            closeModal();
+        });
+
+        cancelButton.addEventListener('click', () => {
+            revertSelection();
+            closeModal();
+        });
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                revertSelection();
+                closeModal();
+            }
+        });
+    });
+</script>
 @endsection

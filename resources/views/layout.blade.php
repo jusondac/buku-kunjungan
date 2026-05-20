@@ -68,6 +68,39 @@
             </div>
         @endif
 
+        @if ($message = Session::get('success'))
+            <div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40">
+                <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+                    <p class="text-sm font-semibold text-slate-900">Terima Kasih</p>
+                    <p class="mt-2 text-sm text-slate-700">{{ $message }}</p>
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" data-action="close" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">Tutup</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                window.addEventListener('load', () => {
+                    const modal = document.getElementById('success-modal');
+                    const closeButton = modal.querySelector('[data-action="close"]');
+
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+
+                    const closeModal = () => {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    };
+
+                    closeButton.addEventListener('click', closeModal);
+                    modal.addEventListener('click', (event) => {
+                        if (event.target === modal) {
+                            closeModal();
+                        }
+                    });
+                });
+            </script>
+        @endif
+
             @yield('content')
         </div>
 

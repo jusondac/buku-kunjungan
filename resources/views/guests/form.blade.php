@@ -71,11 +71,11 @@
 
             <div>
                 <label for="email" class="block text-sm font-medium text-slate-700 mb-2">
-                    Email <span class="text-gray-500">(Opsional)</span>
+                    Email <span class="text-red-500">*</span>
                 </label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}"
                     class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                    placeholder="Masukkan email Anda (opsional)">
+                    placeholder="Masukkan email Anda" required>
             </div>
 
             <div>

@@ -116,6 +116,12 @@ class GuestDataController extends Controller
             $guest->update(['status' => $newStatus]);
         }
 
+        if ($newStatus === 'selesai') {
+            return redirect()->back()
+                ->with('success', 'Status berhasil dirubah.')
+                ->with('status_popup', 'Status berhasil dirubah.');
+        }
+
         return redirect()->back()->with('success', 'Status tamu berhasil diperbarui.');
     }
 

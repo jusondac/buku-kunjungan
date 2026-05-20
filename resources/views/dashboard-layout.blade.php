@@ -115,9 +115,42 @@
                 <!-- Flash Messages -->
                 @if ($message = Session::get('success'))
                     <div class="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-700">
-                        <span>✅ {{ $message }}</span>
+                        <span> {{ $message }}</span>
                         <button onclick="this.parentElement.style.display='none'" class="text-emerald-600 hover:text-emerald-800">×</button>
                     </div>
+                @endif
+
+                @if ($message = Session::get('status_popup'))
+                    <div id="status-popup-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40">
+                        <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+                            <p class="text-sm font-semibold text-slate-900">Status Berhasil</p>
+                            <p class="mt-2 text-sm text-slate-700">{{ $message }}</p>
+                            <div class="mt-6 flex justify-end">
+                                <button type="button" data-action="close" class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        window.addEventListener('load', () => {
+                            const modal = document.getElementById('status-popup-modal');
+                            const closeButton = modal.querySelector('[data-action="close"]');
+
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+
+                            const closeModal = () => {
+                                modal.classList.add('hidden');
+                                modal.classList.remove('flex');
+                            };
+
+                            closeButton.addEventListener('click', closeModal);
+                            modal.addEventListener('click', (event) => {
+                                if (event.target === modal) {
+                                    closeModal();
+                                }
+                            });
+                        });
+                    </script>
                 @endif
                 
                 @if ($message = Session::get('error'))
