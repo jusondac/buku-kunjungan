@@ -19,12 +19,12 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Mulai</label>
-                <input type="date" name="start_date" value="{{ request('start_date', $filterDates['start_date']) }}"
+                <input type="date" name="start_date" value="{{ request('start_date') }}"
                     class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
             </div>
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-2">Tanggal Selesai</label>
-                <input type="date" name="end_date" value="{{ request('end_date', $filterDates['end_date']) }}"
+                <input type="date" name="end_date" value="{{ request('end_date') }}"
                     class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
             </div>
             <div class="flex items-end gap-2 md:col-span-2">

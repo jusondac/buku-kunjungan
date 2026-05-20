@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $endDateInput = $request->input('end_date');
         $periode = $request->input('periode', 'hari_ini');
 
-        if ($startDateInput || $endDateInput) {
+        if ($request->filled('start_date') || $request->filled('end_date')) {
             if ($startDateInput && $endDateInput) {
                 $startDate = Carbon::parse($startDateInput)->startOfDay();
                 $endDate = Carbon::parse($endDateInput)->endOfDay();
