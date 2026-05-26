@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Login Petugas')
+@section('title', 'Petugas')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
@@ -11,7 +11,7 @@
                 <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-20 rounded-2xl bg-white p-2 shadow-md">
                 <div>
                     <p class="text-xs uppercase tracking-[0.3em] text-slate-500">SITADIGI</p>
-                    <h2 class="font-display text-3xl text-slate-900">Login Petugas</h2>
+                    <h2 class="font-display text-3xl text-slate-900">Masuk sebagai Petugas</h2>
                     <p class="mt-3 text-sm text-slate-600">Akses dashboard untuk memantau data kunjungan, status tamu, dan laporan terbaru.</p>
                 </div>
                 <div class="grid gap-3">
@@ -79,7 +79,7 @@
             </div>
 
             <button type="submit" class="w-full rounded-2xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500">
-                Login
+                Masuk
             </button>
         </form>
 

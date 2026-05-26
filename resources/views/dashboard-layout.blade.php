@@ -84,7 +84,7 @@
                                     <path d="M9 15l3 3 3-3" />
                                 </svg>
                             </span>
-                            Laporan
+                            Laporan Kunjungan
                         </a>
                     </li>
                 </ul>
@@ -97,7 +97,7 @@
                 <form method="POST" action="{{ route('logout') }}" class="mt-4">
                     @csrf
                     <button type="submit" class="w-full rounded-2xl bg-slate-900 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800">
-                        Logout
+                        Keluar
                     </button>
                 </form>
             </div>

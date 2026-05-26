@@ -1,6 +1,6 @@
 @extends('dashboard-layout')
 
-@section('page_title', 'Export Data')
+@section('page_title', 'Laporan Kunjungan')
 
 @section('content')
 <div class="space-y-6">
@@ -58,7 +58,6 @@
     @if(request('date_filter') || request('start_date') || request('end_date') || request('keperluan'))
         <!-- Export Buttons -->
         <div class="rounded-3xl border border-white/70 bg-white/80 p-6 shadow-xl shadow-slate-900/10">
-            <h3 class="text-lg font-semibold text-slate-900 mb-4">Export Data</h3>
             <div class="flex gap-4">
                 <a href="{{ route('reports.export.pdf', ['date_filter' => request('date_filter'), 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'keperluan' => request('keperluan')]) }}" 
                     class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-blue-600 py-3 px-4 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition hover:bg-blue-500">
@@ -126,7 +125,7 @@
         </div>
     @else
         <div class="rounded-3xl border border-blue-200 bg-blue-50 p-8 text-center">
-            <p class="text-blue-800 text-lg">Pilih filter dan klik "Tampilkan" untuk melihat data dan export</p>
+            <p class="text-blue-800 text-lg">Pilih filter dan klik "Tampilkan" untuk melihat data dan unduh</p>
         </div>
     @endif
 </div>
