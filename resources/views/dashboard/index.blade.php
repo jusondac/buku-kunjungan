@@ -1,10 +1,10 @@
 @extends('layout')
 
-@section('title', 'Dashboard Petugas')
+@section('title', 'Beranda Petugas')
 
 @section('content')
 <div class="mb-8">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Petugas</h2>
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Beranda Petugas</h2>
 
     <!-- Statistics -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

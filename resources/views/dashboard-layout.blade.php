@@ -32,7 +32,7 @@
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('image/bnn-logo.png') }}" alt="Logo" class="w-12 h-12 rounded-2xl bg-white p-2 shadow-md">
                     <div>
-                        <p class="text-[11px] uppercase tracking-[0.3em] text-slate-500">Dashboard</p>
+                        <p class="text-[11px] uppercase tracking-[0.3em] text-slate-500">Beranda</p>
                         <h1 class="text-lg font-semibold text-slate-900">SITADIGI</h1>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                                     <path d="M17 15V6" />
                                 </svg>
                             </span>
-                            Dashboard
+                            Beranda
                         </a>
                     </li>
                     

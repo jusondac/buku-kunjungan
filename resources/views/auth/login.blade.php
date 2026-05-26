@@ -12,7 +12,7 @@
                 <div>
                     <p class="text-xs uppercase tracking-[0.3em] text-slate-500">SITADIGI</p>
                     <h2 class="font-display text-3xl text-slate-900">Masuk sebagai Petugas</h2>
-                    <p class="mt-3 text-sm text-slate-600">Akses dashboard untuk memantau data kunjungan, status tamu, dan laporan terbaru.</p>
+                    <p class="mt-3 text-sm text-slate-600">Akses Beranda untuk memantau data kunjungan, status tamu, dan laporan terbaru.</p>
                 </div>
                 <div class="grid gap-3">
                     <div class="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow-sm">

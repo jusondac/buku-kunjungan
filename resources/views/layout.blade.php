@@ -45,7 +45,7 @@
                     @endguest
                     @auth
                         <a href="{{ route('dashboard') }}" class="rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-900">
-                            Dashboard
+                            Beranda
                         </a>
                     @endauth
                 </div>

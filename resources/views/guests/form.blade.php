@@ -137,7 +137,7 @@
         @auth
             <div class="mt-4 text-center">
                 <a href="{{ route('dashboard') }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">
-                    ← Kembali ke Dashboard
+                    ← Kembali ke Beranda
                 </a>
             </div>
         @endauth
